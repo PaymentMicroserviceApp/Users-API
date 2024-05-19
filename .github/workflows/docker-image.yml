@@ -76,7 +76,6 @@ jobs:
         ls -la deployment_repo/users-api
 
     - name: Update values.yml with new tag
-      working-directory: deployment_repo
       run: |
         cd deployment_repo/users-api
         sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yaml

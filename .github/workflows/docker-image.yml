@@ -29,12 +29,10 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
 
-    - name: Get the latest release tag
-      id: get_release
-      run: |
-        echo "RELEASE_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
-        echo ${{ env.RELEASE_TAG }}
-
+    - name: Get Latest Tag
+      id: latesttag
+      uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
+            
     - name: Set REPO_ENV variable
       run: |
         REPO_NAME_LOWER=$(echo "${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" | tr '[:upper:]' '[:lower:]')
@@ -50,7 +48,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push Docker image
-      run: docker push ${{ env.REPO_NAME }}:${{ env.RELEASE_TAG }}
+      run: docker push ${{ env.REPO_NAME }}:${{ steps.latesttag.outputs.tag }}
 
   update-deployment:
     runs-on: ubuntu-latest
@@ -67,9 +65,9 @@ jobs:
     - name: Update values.yml with new tag
       run: |
         cd deployment_repo/users-api
-        sed -i 's/tag: .*/tag: '${{ env.RELEASE_TAG }}'/' values.yml
+        sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yml
         git config --global user.email "{{ secrets.DOCKER_USERNAME }}"
         git config --global user.name "Daniela Bonilla Caceres"
         git add values.yml
-        git commit -m "Update image tag to ${{ env.RELEASE_TAG }}"
+        git commit -m "Update image tag to ${{ steps.latesttag.outputs.tag }}"
         git push

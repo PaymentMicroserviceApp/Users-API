@@ -68,6 +68,7 @@ jobs:
         path: deployment_repo
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
+        persist-credentials: true
         
     - name: Debug
       run: |
@@ -75,6 +76,7 @@ jobs:
         ls -la deployment_repo/users-api
 
     - name: Update values.yml with new tag
+      working-directory: deployment_repo
       run: |
         cd deployment_repo/users-api
         sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yaml

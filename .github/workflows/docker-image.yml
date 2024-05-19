@@ -28,7 +28,7 @@ jobs:
       with:
         maven-version: 3.8.6
 
-    - name: Build with Maven
+    #- name: Build with Maven
       # run: mvn clean install
 
     - name: Get Latest Tag
@@ -67,7 +67,6 @@ jobs:
         path: deployment_repo
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-
 
     - name: Update values.yml with new tag
       run: |

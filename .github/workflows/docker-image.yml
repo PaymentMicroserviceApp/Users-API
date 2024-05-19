@@ -66,7 +66,7 @@ jobs:
         repository: PaymentMicroserviceApp/Deployment_ToDo_App
         ref: "main"
         path: deployment_repo
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.REPO_TOKEN }}
         fetch-depth: 0
         persist-credentials: true
         

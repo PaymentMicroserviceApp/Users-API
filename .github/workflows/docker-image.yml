@@ -78,7 +78,7 @@ jobs:
       run: |
         cd deployment_repo/users-api
         sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yaml
-        git config --global user.email "{{ secrets.DOCKER_USERNAME }}"
+        git config --global user.email "danielabc_0106@hotmail.com"
         git config --global user.name "Daniela Bonilla Caceres"
         git add values.yaml
         git commit -m "Update image tag to ${{ steps.latesttag.outputs.tag }}"

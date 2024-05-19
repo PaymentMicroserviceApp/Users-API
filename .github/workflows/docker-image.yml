@@ -74,8 +74,8 @@ jobs:
 
     - name: Update values.yml with new tag
       run: |
-        cd deployment_repo/${{ env.REPO_NAME }}
-        ls
+        cd deployment_repo/users-api
+        ls users-api
         sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yaml
         git config --global user.email "{{ secrets.DOCKER_USERNAME }}"
         git config --global user.name "Daniela Bonilla Caceres"

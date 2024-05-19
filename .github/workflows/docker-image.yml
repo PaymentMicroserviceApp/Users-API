@@ -37,6 +37,8 @@ jobs:
     - name: Get Latest Tag
       id: latesttag
       uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
+      with:
+          fallback: 1.0.0
             
     - name: Set REPO_ENV variable
       id: set-repo-env

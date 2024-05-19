@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      repo-name: ${{ steps.set-repo-env.outputs.REPO_NAME }}
+      release-tag: ${{ steps.latesttag.outputs.tag }}
 
     steps:
     - name: Check out the repository
@@ -36,10 +39,10 @@ jobs:
       uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
             
     - name: Set REPO_ENV variable
+      id: set-repo-env
       run: |
         REPO_NAME_LOWER=$(echo "${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" | tr '[:upper:]' '[:lower:]')
-        echo "REPO_NAME=${REPO_NAME_LOWER}" >> $GITHUB_ENV
-        echo "RELEASE_TAG=${{ steps.latesttag.outputs.tag }}"
+        echo "REPO_NAME=${REPO_NAME_LOWER}" >> $GITHUB_OUTPUT
 
     - name: Build Docker image
       run: docker build -t ${{ env.REPO_NAME }} .
@@ -74,10 +77,10 @@ jobs:
 
     - name: Update values.yml with new tag
       run: |
-        cd deployment_repo/${{ env.REPO_NAME }}
-        sed -i 's/tag: .*/tag: "${{ env.RELEASE_TAG }}"/' values.yaml
+        cd deployment_repo/${{ needs.build.outputs.repo-name }}
+        sed -i 's/tag: .*/tag: "${{ needs.build.outputs.release-tag }}"/' values.yaml
         git config --global user.email "${{ secrets.DOCKER_USERNAME }}"
         git config --global user.name "Daniela Bonilla Caceres"
         git add values.yaml
-        git commit -m "Update image tag to ${{ env.RELEASE_TAG }}"
+        git commit -m "Update image tag to ${{ needs.build.outputs.release-tag }}"
         git push

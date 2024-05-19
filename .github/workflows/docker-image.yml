@@ -19,11 +19,13 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '8'
+        distribution: "temurin"
 
     - name: Set up Maven
-      uses: stCarolas/setup-maven@v4
+      uses: actions/setup-java@v2
       with:
-        maven-version: 3.8.6
+        distribution: 'maven'
+        maven-version: '3.8.6'
 
     - name: Build with Maven
       run: mvn clean install

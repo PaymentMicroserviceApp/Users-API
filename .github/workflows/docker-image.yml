@@ -70,12 +70,13 @@ jobs:
         fetch-depth: 0
         
     - name: Debug
-      run: ls -la deployment_repo
+      run: |
+        ls -la deployment_repo
+        ls -la deployment_repo/users-api
 
     - name: Update values.yml with new tag
       run: |
         cd deployment_repo/users-api
-        ls users-api
         sed -i 's/tag: .*/tag: '${{ steps.latesttag.outputs.tag }}'/' values.yaml
         git config --global user.email "{{ secrets.DOCKER_USERNAME }}"
         git config --global user.name "Daniela Bonilla Caceres"
